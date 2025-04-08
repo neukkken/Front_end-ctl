@@ -1,36 +1,8 @@
+import { useEffect, useState } from "react";
 import DataTableView, { TableColumn } from "../../../components/DataTableView";
 import { Field } from "../../../components/ui/Modal";
-
-const contratistas = [
-    {
-        id: "CON-01",
-        nombre: "Forestal Services S.A",
-        maquinas: 123456678,
-        operadores: 12,
-        estado: false
-    },
-    {
-        id: "CON-01",
-        nombre: "Forestal Services S.A",
-        maquinas: 123456678,
-        operadores: 12,
-        estado: false
-    },
-    {
-        id: "CON-01",
-        nombre: "Forestal Services S.A",
-        maquinas: 123456678,
-        operadores: 12,
-        estado: true
-    },
-    {
-        id: "CON-02",
-        nombre: "kiddkeo",
-        maquinas: 123456678,
-        operadores: 12,
-        estado: true
-    }
-];
+import { ContratistaService } from "../../../api/services/contratistas.service";
+import type { Contratista } from "../../../types/contratista";
 
 const fields: Field[] = [
     {
@@ -38,12 +10,7 @@ const fields: Field[] = [
         name: "nombre",
         type: "text",
         placeholder: "Introduzca el nombre de la empresa",
-    },
-    {
-        label: "Email",
-        name: "email",
-        type: "email",
-        placeholder: "Introduzca el email de la empresa",
+        required: true
     },
     {
         label: "Estado",
@@ -53,18 +20,36 @@ const fields: Field[] = [
             { label: "Activo", value: "activo" },
             { label: "Inactivo", value: "inactivo" },
         ],
+        required: true
     },
 ];
 
 const columns: TableColumn[] = [
-    { header: "ID", accessor: "id" },
+    { header: "ID", accessor: "_id" },
     { header: "Nombre de la empresa", accessor: "nombre", type: "text" },
-    { header: "N. Maquinas", accessor: "maquinas", type: "number" },
-    { header: "N. Operadores", accessor: "operadores", type: "number" },
+    { header: "N. Maquinas", accessor: "totalEquipos", type: "number" },
+    { header: "N. Operadores", accessor: "totalOperadores", type: "number" },
     { header: "Estado", accessor: "estado", type: "status" },
 ];
 
 export default function Contratista() {
+    const [contratistas, setContratistas] = useState<Contratista[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchData = async () => {
+        try {
+            ContratistaService.getAll().then(setContratistas);
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
     return (
         <DataTableView
             title="Gestión de contratistas"
@@ -73,6 +58,28 @@ export default function Contratista() {
             columns={columns}
             fields={fields}
             addButtonText="Agregar Contratista"
+            loading={!loading}
+            service={{
+                create: async (data: Record<string, any>) => {
+                    const nuevoContratista: Contratista = {
+                        nombre: String(data.nombre),
+                        estado: data.estado === 'activo',
+                    };
+                    return await ContratistaService.create(nuevoContratista);
+                },
+                update: async (data: Record<string, any>) => {
+                    const actualizado: Contratista = {
+                        _id: String(data._id),
+                        nombre: String(data.nombre),
+                        estado: data.estado === 'activo',
+                    };
+                    return await ContratistaService.update(actualizado);
+                },
+                delete: async (_id: string) => {
+                    return await ContratistaService.delete(_id);
+                }
+            }}
+            onDataChange={fetchData}
         />
     );
 }

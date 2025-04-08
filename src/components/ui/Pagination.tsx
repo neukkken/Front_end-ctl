@@ -33,23 +33,21 @@ export const Pagination = ({
         icon={""}
         onClick={handlePrevious}
         text={"Anterior"}
-        styles={`px-3 py-1 rounded-[5px] text-[12px] ${
-          currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-        }`}
+        styles={`px-3 py-1 rounded-[5px] text-[12px] ${currentPage === 1 ? "opacity-70 cursor-not-allowed" : ""
+          }`}
         disabled={currentPage === 1}
       />
-      
+
       <span className="text-sm">
         Página {currentPage} de {totalPages}
       </span>
-      
+
       <PrimaryButton
         icon={""}
         onClick={handleNext}
         text={"Siguiente"}
-        styles={`px-3 py-1 rounded-[5px] text-[12px] ${
-          currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
-        }`}
+        styles={`px-3 py-1 rounded-[5px] text-[12px] ${currentPage === totalPages ? "opacity-70 cursor-not-allowed" : ""
+          }`}
         disabled={currentPage === totalPages}
       />
     </div>

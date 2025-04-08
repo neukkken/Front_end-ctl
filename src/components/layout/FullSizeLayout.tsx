@@ -2,7 +2,7 @@ import { FC, ReactNode } from "react";
 
 interface FullSizeLayoutProps {
     children: ReactNode,
-    styles: String
+    styles?: String
 }
 
 const FullSizeLayout: FC<FullSizeLayoutProps> = ({ children, styles }) => {

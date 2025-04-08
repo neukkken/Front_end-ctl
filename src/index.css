@@ -20,6 +20,7 @@
 html,
 body,
 #root {
+  background-color: black;
   height: 100%;
 }
 
@@ -62,6 +63,8 @@ input {
   border-radius: 5px;
   height: 40px;
   padding: 0px 10px;
+  width: 100%;
+  outline: none;
 }
 
 table {
@@ -71,7 +74,7 @@ table {
   border-spacing: 0;
   border: 1px solid var(--color-for-borders);
   border-radius: 5px;
-  background-color: white;
+  background-color: black;
 }
 
 th,
@@ -94,7 +97,6 @@ td:not(:last-child) {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 
 thead tr:first-child th:first-child {
   border-top-left-radius: 5px;
@@ -132,6 +134,19 @@ tbody tr:last-child td:last-child {
     transform: scale(1);
     opacity: 1;
   }
+}
+
+@keyframes slow-float {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.05);
+  }
+}
+
+.animate-slow-float {
+  animation: slow-float 8s ease-in-out infinite;
 }
 
 .animate-fadeIn {

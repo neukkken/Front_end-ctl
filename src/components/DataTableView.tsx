@@ -1,4 +1,4 @@
-import { Edit2Icon, EllipsisIcon, PlusIcon, SearchIcon, Trash2Icon } from "lucide-react";
+import { Edit2Icon, EllipsisIcon, PlusIcon, SearchIcon, Trash2Icon, XIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 // Componentes UI
@@ -28,6 +28,18 @@ interface DataTableViewProps {
     addButtonText: string;
     itemsPerPage?: number;
     searchPlaceholder?: string;
+    viewOptions?: {
+        label: string;
+        value: string;
+        columns: TableColumn[];
+    }[];
+    loading: boolean;
+    service: {
+        create: (data: Record<string, any>) => Promise<any>;
+        update: (data: Record<string, any>) => Promise<any>;
+        delete: (_id: string) => Promise<any>;
+    };
+    onDataChange?: () => void;
 }
 
 export default function DataTableView({
@@ -38,18 +50,25 @@ export default function DataTableView({
     fields,
     addButtonText,
     itemsPerPage = 10,
-    searchPlaceholder = "Buscar..."
+    searchPlaceholder = "Buscar...",
+    viewOptions = [],
+    loading,
+    service,
+    onDataChange
 }: DataTableViewProps) {
     // Estados
     const [openDropdownIndex, setOpenDropdownIndex] = useState<number | null>(null);
     const [dropdownDirection, setDropdownDirection] = useState<'bottom' | 'top'>('bottom');
     const [isModalAddOpen, setIsModalAddOpen] = useState(false);
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<any | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
     const [activeFilter, setActiveFilter] = useState<string | null>(null);
     const [filterValue, setFilterValue] = useState("");
+    const [currentView, setCurrentView] = useState<string>("default");
+    const [currentColumns, setCurrentColumns] = useState<TableColumn[]>(columns);
 
     // Refs
     const buttonRefs = useRef<ButtonRefs>([]);
@@ -61,6 +80,26 @@ export default function DataTableView({
         buttonRefs.current = buttonRefs.current.slice(0, data.length);
         dropdownRefs.current = dropdownRefs.current.slice(0, data.length);
     }, [data.length]);
+
+    // Efecto para cambiar las columnas cuando cambia la vista
+    useEffect(() => {
+        if (viewOptions.length > 0) {
+            if (currentView === "default") {
+                setCurrentColumns(columns);
+            } else {
+                const selectedView = viewOptions.find(view => view.value === currentView);
+                if (selectedView) {
+                    setCurrentColumns(selectedView.columns);
+                }
+            }
+        }
+    }, [currentView, columns, viewOptions]);
+
+    useEffect(() => {
+        if (currentView === "default") {
+            setCurrentColumns(columns);
+        }
+    }, [columns]);
 
     // Datos filtrados
     const filteredData = data.filter(item => {
@@ -148,9 +187,12 @@ export default function DataTableView({
         setOpenDropdownIndex(index);
     };
 
-    // Render helpers
+    const getNestedValue = (obj: any, path: string): any => {
+        return path.split('.').reduce((acc, key) => acc?.[key], obj);
+    };
+
     const renderCellContent = (item: any, column: TableColumn) => {
-        const value = item[column.accessor];
+        const value = getNestedValue(item, column.accessor);
 
         switch (column.type) {
             case 'status':
@@ -170,30 +212,60 @@ export default function DataTableView({
         <div className="overflow-y-auto" ref={tableContainerRef}>
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                 <div>
-                    <h3 className="text-2xl font-bold">{title}</h3>
-                    <p className="text-[#00000059] text-[13px]">{description}</p>
+                    <h3 className="text-2xl font-bold text-[#22D3EE]">{title}</h3>
+                    <p className="text-[#ffffff88] text-[13px]">{description}</p>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3">
-                    <div className="flex border border-gray-300 bg-white placeholder-gray-500 rounded-lg">
-                        <div className="inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <SearchIcon className="h-5 w-5 text-gray-400" />
+                    <div className="relative group w-auto">
+                        <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-cyan-500/30 to-purple-500/30 blur-sm"></div>
+
+                        <div className="relative flex h-12 items-center rounded-lg border border-cyan-500/20 bg-black/60 px-3 text-sm backdrop-blur-xl focus-within:border-cyan-400/50 focus-within:ring-1 focus-within:ring-cyan-400/50">
+                            <div className="inset-y-0 left-0 flex items-center pointer-events-none">
+                                <SearchIcon className="h-4 w-4 text-cyan-400 mr-2" />
+                            </div>
+
+                            <input
+                                type="text"
+                                placeholder={searchPlaceholder}
+                                className="flex-1 bg-transparent text-white placeholder-gray-400 outline-none"
+                                value={searchTerm}
+                                onChange={(e) => {
+                                    setSearchTerm(e.target.value);
+                                    setCurrentPage(1);
+                                }}
+                            />
+
+                            {/* Línea inferior animada */}
+                            <div className="absolute -bottom-px left-0 h-px w-full bg-gradient-to-r from-cyan-500/50 via-purple-500/50 to-transparent scale-x-0 transition-transform duration-300 group-focus-within:scale-x-100"></div>
+
+                            {/* Pulso decorativo */}
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                                <div className="h-1 w-1 rounded-full bg-cyan-400 animate-pulse"></div>
+                                <div className="h-1 w-1 rounded-full bg-purple-400 animate-pulse delay-150"></div>
+                            </div>
                         </div>
-                        <input
-                            type="text"
-                            placeholder={searchPlaceholder}
-                            className="block w-full pl-10 pr-3 py-2 leading-5 outline-none sm:text-sm"
-                            value={searchTerm}
-                            onChange={(e) => {
-                                setSearchTerm(e.target.value);
-                                setCurrentPage(1);
-                            }}
-                        />
                     </div>
+
+
+                    {viewOptions.length > 0 && (
+                        <select
+                            className="border border-gray-300 bg-black rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            value={currentView}
+                            onChange={(e) => setCurrentView(e.target.value)}
+                        >
+                            <option value="default">Vista predeterminada</option>
+                            {viewOptions.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select>
+                    )}
 
                     <PrimaryButton
                         onClick={() => setIsModalAddOpen(true)}
-                        styles="flex rounded-lg px-4 py-2 items-center justify-center text-white"
+                        styles="flex rounded-lg px-4 py-2 items-center justify-center text-black bg-white"
                         text={addButtonText}
                         icon={<PlusIcon size={20} className="mr-2" />}
                     />
@@ -201,7 +273,7 @@ export default function DataTableView({
             </div>
 
             <div className="flex flex-wrap gap-2 mb-4">
-                {columns.filter(c => c.filterable).map(column => (
+                {currentColumns.filter(c => c.filterable).map(column => (
                     <div key={column.accessor} className="flex items-center gap-2">
                         <SecondaryButton
                             onClick={() => handleFilterChange(column.accessor)}
@@ -226,93 +298,107 @@ export default function DataTableView({
                 ))}
             </div>
 
-            {/* Tabla */}
-            <div className="bg-white rounded-lg shadow overflow-hidden">
-                <table className="w-full text-left">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            {columns.map((column, index) => (
-                                <th key={index} className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    {column.header}
-                                </th>
-                            ))}
-                            <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">
-                                Acciones
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {currentItems.length > 0 ? (
-                            currentItems.map((item, index) => (
-                                <tr key={index} className="hover:bg-gray-50">
-                                    {columns.map((column, colIndex) => (
-                                        <td
-                                            key={colIndex}
-                                            className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 truncate max-w-xs"
-                                            title={String(item[column.accessor])}
-                                        >
-                                            {renderCellContent(item, column)}
-                                        </td>
-                                    ))}
-                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <div className="relative inline-block text-left">
-                                            <button
-                                                ref={(el) => {
-                                                    if (el) buttonRefs.current[index] = el;
-                                                }}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    toggleDropdown(index);
-                                                }}
-                                                className="p-1 rounded hover:bg-gray-100 ellipsis-button"
-                                            >
-                                                <EllipsisIcon className="h-4 w-4" />
-                                            </button>
+            <div className="relative rounded-lg overflow-hidden group">
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-cyan-500/30 to-purple-500/30 blur-sm z-0"></div>
 
-                                            {openDropdownIndex === index && (
-                                                <div
-                                                    ref={(el) => {
-                                                        if (el) dropdownRefs.current[index] = el;
-                                                    }}
-                                                    className={`animate-scaleIn absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg focus:outline-none ${dropdownDirection === 'bottom' ? 'top-full' : 'bottom-full'
-                                                        }`}
-                                                >
-                                                    <div className="py-1">
-                                                        <p className="px-4 py-2 text-xs font-bold text-gray-700">Acciones</p>
-                                                        <button
-                                                            onClick={() => {
-                                                                setIsModalEditOpen(true);
-                                                                setSelectedItem({
-                                                                    ...item,
-                                                                    estado: item.estado ? "activo" : "inactivo"
-                                                                });
-                                                                setOpenDropdownIndex(null);
-                                                            }}
-                                                            className="flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                        >
-                                                            <Edit2Icon size={14} className="mr-2" /> Editar
-                                                        </button>
-                                                        <button
-                                                            className="flex w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                                                        >
-                                                            <Trash2Icon size={14} className="mr-2" /> Eliminar
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
-                        ) : (
+                <div className="relative z-10 rounded-lg border border-cyan-800/20 bg-black/60 backdrop-blur-3xl">
+                    <table className="w-full text-left">
+                        <thead className="bg-black">
                             <tr>
-                                <td colSpan={columns.length + 1} className="px-6 py-4 text-center text-sm text-gray-500">
-                                    {filteredData.length === 0 ? "No se encontraron resultados" : "No hay datos en esta página"}
-                                </td>
+                                {currentColumns.map((column, index) => (
+                                    <th key={index} className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        {column.header}
+                                    </th>
+                                ))}
+                                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">
+                                    Acciones
+                                </th>
                             </tr>
-                        )}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody className="bg-black divide-y divide-gray-200">
+                            {currentItems.length > 0 ? (
+                                currentItems.map((item, index) => (
+                                    <tr key={index} className="hover:bg-[#ffffff10]">
+                                        {currentColumns.map((column, colIndex) => (
+                                            <td
+                                                key={colIndex}
+                                                className="px-6 py-4 whitespace-nowrap text-sm text-gray-400 truncate max-w-xs"
+                                                title={String(item[column.accessor])}
+                                            >
+                                                {renderCellContent(item, column)}
+                                            </td>
+                                        ))}
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <div className="relative inline-block text-left">
+                                                <button
+                                                    ref={(el) => {
+                                                        if (el) buttonRefs.current[index] = el;
+                                                    }}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        toggleDropdown(index);
+                                                        setSelectedItem(item);
+                                                    }}
+                                                    className="p-1 rounded hover:bg-gray-700 ellipsis-button"
+                                                >
+                                                    <EllipsisIcon className="h-4 w-4" />
+                                                </button>
+
+                                                {openDropdownIndex === index && (
+                                                    <div
+                                                        ref={(el) => {
+                                                            if (el) dropdownRefs.current[index] = el;
+                                                        }}
+                                                        className={`animate-scaleIn absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-black shadow-lg focus:outline-none ${dropdownDirection === 'bottom' ? 'top-full' : 'bottom-full'
+                                                            }`}
+                                                    >
+                                                        <div className="py-1">
+                                                            <p className="px-4 py-2 text-xs font-bold text-gray-500">Acciones</p>
+                                                            <button
+                                                                onClick={() => {
+                                                                    setIsModalEditOpen(true);
+                                                                    setSelectedItem({
+                                                                        ...item,
+                                                                        estado: item.estado ? "activo" : "inactivo"
+                                                                    });
+                                                                    setOpenDropdownIndex(null);
+                                                                }}
+                                                                className="flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-900"
+                                                            >
+                                                                <Edit2Icon size={14} className="mr-2" /> Editar
+                                                            </button>
+                                                            <button
+                                                                onClick={() => { setIsDeleteModalOpen(true) }}
+                                                                className="flex w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-900"
+                                                            >
+                                                                <Trash2Icon size={14} className="mr-2" /> Eliminar
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    {
+                                        loading ? (
+                                            <td colSpan={currentColumns.length + 1} className="px-6 py-4 text-center text-sm text-gray-500">
+                                                Cargando...
+                                            </td>
+                                        ) : filteredData.length === 0 ? (
+                                            <td colSpan={currentColumns.length + 1} className="px-6 py-4 text-center text-sm text-gray-500">
+                                                No se encontraron resultados
+                                            </td>
+                                        ) : null
+                                    }
+
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             {/* Paginación */}
@@ -332,9 +418,16 @@ export default function DataTableView({
                 title={`Añadir nuevo ${title}`}
                 description={`Complete los detalles para añadir un nuevo registro al sistema.`}
                 fields={fields}
-                onSubmit={(formData) => {
-                    const data = Object.fromEntries(formData.entries());
-                    console.log("Formulario enviado:", data);
+                onSubmit={async (formData) => {
+                    const raw = Object.fromEntries(formData.entries());
+                    console.log(raw)
+                    try {
+                        await service.create(raw);
+                        onDataChange?.();
+                        setIsModalAddOpen(false);
+                    } catch (error) {
+                        console.error("Error al crear:", error);
+                    }
                 }}
                 buttonText="Agregar"
             />
@@ -346,12 +439,63 @@ export default function DataTableView({
                 description={`Complete los detalles para editar el registro en el sistema.`}
                 fields={fields}
                 initialValues={selectedItem}
-                onSubmit={(formData) => {
-                    const data = Object.fromEntries(formData.entries());
-                    console.log("Formulario actualizado:", data);
+                onSubmit={async (formData) => {
+                    const raw = Object.fromEntries(formData.entries());
+
+                    const updatedItem = {
+                        ...selectedItem,
+                        ...raw
+                    };
+
+                    try {
+                        await service.update(updatedItem);
+                        onDataChange?.();
+                        setIsModalEditOpen(false);
+                    } catch (error) {
+                        console.error("Error al actualizar:", error);
+                    }
                 }}
                 buttonText="Guardar cambios"
             />
+
+            {
+                isDeleteModalOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#000000ab] bg-opacity-70 animate-fadeIn">
+                        <div className="bg-black p-6 rounded-lg max-w-[70%] max-h-[90%] overflow-auto animate-scaleIn">
+                            <div>
+                                <h3 className="text-2xl font-bold">¿Está seguro de eliminar esta actividad?</h3>
+                                <p className="text-gray-500 text-[13px]">Esta acción no se puede deshacer. Esto eliminará permanentemente el registro del sistema.</p>
+                            </div>
+                            <div className="flex items-center justify-end w-full gap-5">
+                                <button
+                                    onClick={() => { setIsDeleteModalOpen(false) }}
+                                    className="gap-2 inline-flex items-center px-4 border-[1px] py-2 mt-4 bg-white transition ease-in-out delay-75 hover:bg-gray-300 text-black text-sm font-medium rounded-md"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    className="gap-2 inline-flex items-center px-4 py-2 mt-4 bg-red-600 transition ease-in-out delay-75 hover:bg-red-700 text-white text-sm font-medium rounded-md"
+                                    onClick={async () => {
+                                        try {
+                                            await service.delete(selectedItem._id);
+                                            onDataChange?.();
+                                            setIsDeleteModalOpen(false);
+                                        } catch (error) {
+                                            console.error("Error al eliminar:", error);
+                                        }
+                                    }}
+                                >
+                                    <Trash2Icon />
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                )
+            }
+
         </div>
     );
 }

@@ -10,7 +10,7 @@ interface ButtonProps {
 
 export function PrimaryButton({ text, styles, onClick, icon, disabled }: ButtonProps) {
     return (
-        <button disabled={disabled} className={`bg-black text-white font-semibold cursor-pointer ${styles} hover:bg-[#000000b0] transition-all`} onClick={onClick} type="submit">
+        <button disabled={disabled} className={`font-semibold cursor-pointer ${styles} hover:bg-black transition-all hover:text-white`} onClick={onClick} type="submit">
             {icon} {text}
         </button>
     )
