@@ -1,4 +1,4 @@
-import { Edit2Icon, EllipsisIcon, PlusIcon, SearchIcon, Trash2Icon, XIcon } from "lucide-react";
+import { Edit2Icon, EllipsisIcon, PlusIcon, SearchIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 // Componentes UI

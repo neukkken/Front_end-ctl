@@ -149,7 +149,9 @@ export default function Ubicaciones() {
             label: "Zona Asociada",
             name: "zonaId",
             type: "select",
-            options: zonas.map(z => ({ label: z.nombreZona, value: z._id }))
+            options: zonas
+                .filter(z => z._id !== undefined)
+                .map(z => ({ label: z.nombreZona, value: z._id as string }))
         }
     ];
 
@@ -170,7 +172,9 @@ export default function Ubicaciones() {
             label: "Núcleo Asociado",
             name: "nucleoId",
             type: "select",
-            options: nucleos.map(n => ({ label: n.nombreNucleo, value: n._id }))
+            options: nucleos
+                .filter(n => n._id !== undefined)
+                .map(n => ({ label: n.nombreNucleo, value: n._id as string }))
         }
     ];
 
