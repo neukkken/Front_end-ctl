@@ -13,7 +13,7 @@ export default function Login() {
 
     useEffect(() => {
         if (!loading && isAuthenticated) {
-            navigate('/admin/dashboard')
+            navigate('/admin/contratistas')
         }
     }, [loading, isAuthenticated, navigate])
 
