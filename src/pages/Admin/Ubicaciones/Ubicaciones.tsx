@@ -117,6 +117,144 @@ export default function Ubicaciones() {
         }
     };
 
+    const zonaFields: Field[] = [
+        {
+            label: "Nombre de Zona",
+            name: "nombreZona",
+            type: "text",
+            placeholder: "Introduzca el nombre de la zona",
+        },
+        {
+            label: "Código de Zona",
+            name: "codeZona",
+            type: "text",
+            placeholder: "Código identificador de la zona",
+        }
+    ];
+
+    const nucleoFields: Field[] = [
+        {
+            label: "Nombre del Núcleo",
+            name: "nombreNucleo",
+            type: "text",
+            placeholder: "Introduzca el nombre del núcleo",
+        },
+        {
+            label: "Código del Núcleo",
+            name: "codeNucleo",
+            type: "text",
+            placeholder: "Código del núcleo",
+        },
+        {
+            label: "Zona Asociada",
+            name: "zonaId",
+            type: "select",
+            options: zonas.map(z => ({ label: z.nombreZona, value: z._id }))
+        }
+    ];
+
+    const fincaFields: Field[] = [
+        {
+            label: "Nombre de la Finca",
+            name: "nombreFinca",
+            type: "text",
+            placeholder: "Nombre de la finca",
+        },
+        {
+            label: "Código de la Finca",
+            name: "codeFinca",
+            type: "text",
+            placeholder: "Código de la finca",
+        },
+        {
+            label: "Núcleo Asociado",
+            name: "nucleoId",
+            type: "select",
+            options: nucleos.map(n => ({ label: n.nombreNucleo, value: n._id }))
+        }
+    ];
+
+    const getFields = (): Field[] => {
+        switch (selectedView) {
+            case "zonas": return zonaFields;
+            case "nucleos": return nucleoFields;
+            case "fincas": return fincaFields;
+            default: return [];
+        }
+    };
+
+    const getService = () => {
+        switch (selectedView) {
+            case "zonas":
+                return {
+                    create: async (data: Record<string, any>) => {
+                        return await ZonasService.create({
+                            nombreZona: String(data.nombreZona),
+                            codeZona: String(data.codeZona)
+                        });
+                    },
+                    update: async (data: Record<string, any>) => {
+                        return await ZonasService.update({
+                            _id: data._id,
+                            nombreZona: String(data.nombreZona),
+                            codeZona: String(data.codeZona)
+                        });
+                    },
+                    delete: async (_id: string) => {
+                        return await ZonasService.delete(_id);
+                    }
+                };
+            case "nucleos":
+                return {
+                    create: async (data: Record<string, any>) => {
+                        return await NucleosService.create({
+                            nombreNucleo: String(data.nombreNucleo),
+                            codeNucleo: String(data.codeNucleo),
+                            zonaId: String(data.zonaId)
+                        });
+                    },
+                    update: async (data: Record<string, any>) => {
+                        return await NucleosService.update({
+                            _id: data._id,
+                            nombreNucleo: String(data.nombreNucleo),
+                            codeNucleo: String(data.codeNucleo),
+                            zonaId: String(data.zonaId)
+                        });
+                    },
+                    delete: async (_id: string) => {
+                        return await NucleosService.delete(_id);
+                    }
+                };
+            case "fincas":
+                return {
+                    create: async (data: Record<string, any>) => {
+                        return await FincasService.create({
+                            nombreFinca: String(data.nombreFinca),
+                            codeFinca: String(data.codeFinca),
+                            nucleoId: String(data.nucleoId)
+                        });
+                    },
+                    update: async (data: Record<string, any>) => {
+                        return await FincasService.update({
+                            _id: data.id,
+                            nombreFinca: String(data.nombreFinca),
+                            codeFinca: String(data.codeFinca),
+                            nucleoId: String(data.nucleoId)
+                        });
+                    },
+                    delete: async (_id: string) => {
+                        return await FincasService.delete(_id);
+                    }
+                };
+            default:
+                return {
+                    create: async () => { },
+                    update: async () => { },
+                    delete: async () => { }
+                };
+        }
+    };
+
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">Ubicaciones</h1>
@@ -144,10 +282,13 @@ export default function Ubicaciones() {
                 description={`Ver y gestionar, ${selectedView} en el sistema`}
                 data={getData()}
                 columns={getColumns()}
-                fields={fields}
+                fields={getFields()}
                 loading={loading}
                 addButtonText="Agregar Ubicación"
+                service={getService()}
+                onDataChange={fetchData}
             />
+
         </div>
     );
 }

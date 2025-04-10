@@ -45,7 +45,7 @@ export default function Login() {
 
         try {
             const success = await login(credentials)
-            if (success) navigate('/admin/dashboard')
+            if (success) navigate('/admin/contratistas')
             else setErrors({ email: '', password: '', general: 'El email y la contraseña no coinciden' })
         } catch (error: any) {
             setErrors(prev => ({ ...prev, general: error.message || 'Error al iniciar sesión' }))
@@ -68,7 +68,7 @@ export default function Login() {
 
                 <form onSubmit={handleSubmit} className="relative rounded-lg border border-cyan-500/20 bg-black/60 p-6 backdrop-blur-xl space-y-4">
                     <div>
-                        <label htmlFor="email" className="block text-xs text-gray-400 mb-1">EMAIL</label>
+                        <label htmlFor="email" className="block text-sm text-gray-400 mb-1">EMAIL</label>
                         <div className={`flex items-center rounded-md border ${errors.email ? 'border-red-500' : 'border-cyan-500/20'} bg-black/60 px-3 py-2`}>
                             <Mail className="h-4 w-4 text-cyan-400 mr-2" />
                             <input
@@ -101,6 +101,7 @@ export default function Login() {
                                 value={credentials.password}
                                 onChange={handleChange}
                                 placeholder="••••••••••••"
+                                autoComplete='off'
                                 className="w-full bg-transparent text-sm text-white placeholder-gray-500 outline-none"
                             />
                             <button

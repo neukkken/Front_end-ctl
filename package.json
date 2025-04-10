@@ -12,12 +12,14 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.0.15",
     "@types/echarts": "^4.9.22",
+    "apexcharts": "^4.5.0",
     "axios": "^1.8.4",
     "echarts": "^5.6.0",
     "echarts-for-react": "^3.0.2",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.483.0",
     "react": "^19.0.0",
+    "react-apexcharts": "^1.7.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.4.0"
   },

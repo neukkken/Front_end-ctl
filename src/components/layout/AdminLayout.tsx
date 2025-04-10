@@ -14,7 +14,6 @@ import SideBar from "../ui/SideBar"
 import { Outlet } from "react-router-dom"
 
 const sideBarProps = [
-    { title: "Dashboard", icon: <HomeIcon />, path: "/admin/dashboard" },
     { title: "Contratistas", icon: <HandshakeIcon />, path: "/admin/contratistas" },
     { title: "Operadores", icon: <UsersIcon />, path: "/admin/operadores" },
     { title: "Ubicaciones", icon: <MapIcon />, path: "/admin/ubicaciones" },

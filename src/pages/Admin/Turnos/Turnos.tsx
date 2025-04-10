@@ -57,7 +57,7 @@ export default function Turnos() {
         },
         {
             label: "Contratista",
-            name: "contratistaId._id",
+            name: "contratistaId",
             type: "select",
             options: contratistaOptions,
             required: true
@@ -76,14 +76,14 @@ export default function Turnos() {
             columns={turnosColumns}
             fields={fields}
             loading={!loading}
-            addButtonText="Agregar Equipo"
+            addButtonText="Agregar turno"
             service={{
                 create: async (data: Record<string, any>) => {
                     const nuevoTurno: Turno = {
                         nombreTurno: String(data.nombreTurno),
                         horaInicio: data.horaInicio,
                         horaFin: data.horaFin,
-                        contratistaId: data.contratistaId
+                        contratistaId: String(data.contratistaId)
                     };
                     return await TurnosService.create(nuevoTurno);
                 },
