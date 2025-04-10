@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import Login from '../pages/Login';
 import NotFound from '../pages/NotFound';
 import AdminLayout from '../components/layout/AdminLayout';
-import Dashboard from '../pages/Admin/Dashboard';
+// import Dashboard from '../pages/Admin/Dashboard';
 import Contratista from '../pages/Admin/Contratistas/Contratistas';
 import Operadores from '../pages/Admin/Operadores/Operadores';
 import Ubicaciones from '../pages/Admin/Ubicaciones/Ubicaciones';
@@ -38,7 +38,7 @@ export const router = createBrowserRouter([
       </AuthCheck>
     ),
     children: [
-      { path: 'dashboard', element: <Dashboard /> },
+      // { path: 'dashboard', element: <Dashboard /> },
       { path: 'contratistas', element: <Contratista /> },
       { path: 'operadores', element: <Operadores /> },
       { path: 'ubicaciones', element: <Ubicaciones /> },
