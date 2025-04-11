@@ -8,5 +8,15 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
-  base: "./"
+  base: '/',
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true,
+    rollupOptions: {
+      input: '/index.html'
+    }
+  },
+  server: {
+    open: true
+  }
 })
