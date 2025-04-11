@@ -6,32 +6,6 @@ import { Finca } from "../../../types/fincas";
 import { Nucleo } from "../../../types/nucleo";
 import { FincasService, NucleosService, ZonasService } from "../../../api/services/ubicaciones.service";
 
-// Definición de campos para el formulario
-const fields: Field[] = [
-    {
-        label: "Nombre",
-        name: "nombre",
-        type: "text",
-        placeholder: "Introduzca el nombre",
-    },
-    {
-        label: "Tipo",
-        name: "tipo",
-        type: "select",
-        options: [
-            { label: "Zona", value: "zona" },
-            { label: "Núcleo", value: "nucleo" },
-            { label: "Finca", value: "finca" },
-        ],
-    },
-    {
-        label: "Código",
-        name: "codigo",
-        type: "text",
-        placeholder: "Código identificador",
-    }
-];
-
 // Columnas específicas
 const zonasColumns: TableColumn[] = [
     { header: "ID", accessor: "_id" },
