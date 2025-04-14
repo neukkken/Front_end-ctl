@@ -29,7 +29,7 @@ const AdminLayout = () => {
             {/* Header con fondo oscuro y glow sutil */}
             <header className="h-20 px-6 flex items-center gap-4 border-b border-white/10 bg-[#060911] shadow-[0_2px_10px_rgba(0,0,0,0.3)] z-10">
                 <img src="/favicon-512x512.png" alt="" className="w-14 h-14"/>
-                <h1 className="text-xl font-semibold text-white tracking-wide">Administrador CTL</h1>
+                <h1 className="text-[1em] font-semibold text-white tracking-wide">Administrador CTL</h1>
             </header>
 
             <div className="flex flex-1 overflow-hidden">

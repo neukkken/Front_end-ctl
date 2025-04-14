@@ -302,102 +302,139 @@ export default function DataTableView({
                 <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-cyan-500/30 to-purple-500/30 blur-sm z-0"></div>
 
                 <div className="relative z-10 rounded-lg border border-cyan-800/20 bg-black/60 backdrop-blur-3xl">
-                    <table className="w-full text-left">
-                        <thead className="bg-black">
-                            <tr>
-                                {currentColumns.map((column, index) => (
-                                    <th key={index} className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        {column.header}
+                    {/* Desktop Table */}
+                    <div className="hidden md:block">
+                        <table className="w-full text-left">
+                            <thead className="bg-black">
+                                <tr>
+                                    {currentColumns.map((column, index) => (
+                                        <th key={index} className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            {column.header}
+                                        </th>
+                                    ))}
+                                    <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">
+                                        Acciones
                                     </th>
-                                ))}
-                                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">
-                                    Acciones
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-black divide-y divide-gray-200">
-                            {currentItems.length > 0 ? (
-                                currentItems.map((item, index) => (
-                                    <tr key={index} className="hover:bg-[#ffffff10]">
-                                        {currentColumns.map((column, colIndex) => (
-                                            <td
-                                                key={colIndex}
-                                                className="px-6 py-4 whitespace-nowrap text-sm text-gray-400 truncate max-w-xs"
-                                                title={String(item[column.accessor])}
-                                            >
-                                                {renderCellContent(item, column)}
-                                            </td>
-                                        ))}
-                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <div className="relative inline-block text-left">
-                                                <button
-                                                    ref={(el) => {
-                                                        if (el) buttonRefs.current[index] = el;
-                                                    }}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        toggleDropdown(index);
-                                                        setSelectedItem(item);
-                                                    }}
-                                                    className="p-1 rounded hover:bg-gray-700 ellipsis-button"
+                                </tr>
+                            </thead>
+                            <tbody className="bg-black divide-y divide-gray-200">
+                                {currentItems.length > 0 ? (
+                                    currentItems.map((item, index) => (
+                                        <tr key={index} className="hover:bg-[#ffffff10]">
+                                            {currentColumns.map((column, colIndex) => (
+                                                <td
+                                                    key={colIndex}
+                                                    className="px-6 py-4 whitespace-nowrap text-sm text-gray-400 truncate max-w-xs"
+                                                    title={String(item[column.accessor])}
                                                 >
-                                                    <EllipsisIcon className="h-4 w-4" />
-                                                </button>
-
-                                                {openDropdownIndex === index && (
-                                                    <div
+                                                    {renderCellContent(item, column)}
+                                                </td>
+                                            ))}
+                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <div className="relative inline-block text-left">
+                                                    <button
                                                         ref={(el) => {
-                                                            if (el) dropdownRefs.current[index] = el;
+                                                            if (el) buttonRefs.current[index] = el;
                                                         }}
-                                                        className={`animate-scaleIn absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-black shadow-lg focus:outline-none ${dropdownDirection === 'bottom' ? 'top-full' : 'bottom-full'
-                                                            }`}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            toggleDropdown(index);
+                                                            setSelectedItem(item);
+                                                        }}
+                                                        className="p-1 rounded hover:bg-gray-700 ellipsis-button"
                                                     >
-                                                        <div className="py-1">
-                                                            <p className="px-4 py-2 text-xs font-bold text-gray-500">Acciones</p>
-                                                            <button
-                                                                onClick={() => {
-                                                                    setIsModalEditOpen(true);
-                                                                    setSelectedItem({
-                                                                        ...item,
-                                                                        estado: item.estado ? "activo" : "inactivo"
-                                                                    });
-                                                                    setOpenDropdownIndex(null);
-                                                                }}
-                                                                className="flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-900"
-                                                            >
-                                                                <Edit2Icon size={14} className="mr-2" /> Editar
-                                                            </button>
-                                                            <button
-                                                                onClick={() => { setIsDeleteModalOpen(true) }}
-                                                                className="flex w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-900"
-                                                            >
-                                                                <Trash2Icon size={14} className="mr-2" /> Eliminar
-                                                            </button>
+                                                        <EllipsisIcon className="h-4 w-4" />
+                                                    </button>
+
+                                                    {openDropdownIndex === index && (
+                                                        <div
+                                                            ref={(el) => {
+                                                                if (el) dropdownRefs.current[index] = el;
+                                                            }}
+                                                            className={`animate-scaleIn absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-black shadow-lg focus:outline-none ${dropdownDirection === 'bottom' ? 'top-full' : 'bottom-full'}`}
+                                                        >
+                                                            <div className="py-1">
+                                                                <p className="px-4 py-2 text-xs font-bold text-gray-500">Acciones</p>
+                                                                <button
+                                                                    onClick={() => {
+                                                                        setIsModalEditOpen(true);
+                                                                        setSelectedItem({
+                                                                            ...item,
+                                                                            estado: item.estado ? "activo" : "inactivo"
+                                                                        });
+                                                                        setOpenDropdownIndex(null);
+                                                                    }}
+                                                                    className="flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-900"
+                                                                >
+                                                                    <Edit2Icon size={14} className="mr-2" /> Editar
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => { setIsDeleteModalOpen(true); setSelectedItem(item); }}
+                                                                    className="flex w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-900"
+                                                                >
+                                                                    <Trash2Icon size={14} className="mr-2" /> Eliminar
+                                                                </button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                )}
-                                            </div>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan={currentColumns.length + 1} className="px-6 py-4 text-center text-sm text-gray-500">
+                                            {loading
+                                                ? "Cargando..."
+                                                : filteredData.length === 0
+                                                    ? "No se encontraron resultados"
+                                                    : null}
                                         </td>
                                     </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    {
-                                        loading ? (
-                                            <td colSpan={currentColumns.length + 1} className="px-6 py-4 text-center text-sm text-gray-500">
-                                                Cargando...
-                                            </td>
-                                        ) : filteredData.length === 0 ? (
-                                            <td colSpan={currentColumns.length + 1} className="px-6 py-4 text-center text-sm text-gray-500">
-                                                No se encontraron resultados
-                                            </td>
-                                        ) : null
-                                    }
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
 
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                    {/* Mobile View */}
+                    <div className="md:hidden space-y-4">
+                        {currentItems.length > 0 ? currentItems.map((item, index) => (
+                            <div key={index} className="border border-cyan-700/30 bg-black/60 backdrop-blur-xl rounded-lg p-4 text-sm text-gray-300">
+                                {currentColumns.map((column, colIndex) => (
+                                    <div key={colIndex} className="flex justify-between py-1 border-b border-white/5 last:border-none">
+                                        <span className="text-gray-500 font-medium">{column.header}</span>
+                                        <span className="text-right text-gray-300">{renderCellContent(item, column)}</span>
+                                    </div>
+                                ))}
+                                <div className="flex justify-end gap-2 mt-4">
+                                    <button
+                                        onClick={() => {
+                                            setIsModalEditOpen(true);
+                                            setSelectedItem({
+                                                ...item,
+                                                estado: item.estado ? "activo" : "inactivo"
+                                            });
+                                        }}
+                                        className="px-3 py-1 rounded-md bg-white text-black text-xs font-medium hover:bg-gray-200 transition"
+                                    >
+                                        Editar
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setIsDeleteModalOpen(true);
+                                            setSelectedItem(item);
+                                        }}
+                                        className="px-3 py-1 rounded-md bg-red-600 text-white text-xs font-medium hover:bg-red-700 transition"
+                                    >
+                                        Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        )) : (
+                            <div className="text-center text-sm text-gray-500">No se encontraron resultados</div>
+                        )}
+                    </div>
+
                 </div>
             </div>
 

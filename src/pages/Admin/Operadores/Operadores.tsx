@@ -30,8 +30,6 @@ export default function Operadores() {
         }
     };
 
-    console.log(equipos)
-
     const equiposOptions = equipos.map(equipo => ({
         label: equipo.nombreEquipo,
         value: equipo._id!
