@@ -13,9 +13,7 @@ export const TurnosService = {
     },
 
     async update(turno: Turno): Promise<Turno[]> {
-        console.log(turno)
-        const { data } = await axios.put(`/ctl/turnos/edit/${turno._id}`)
-        console.log(data)
+        const { data } = await axios.put(`/ctl/turnos/edit/${turno._id}`, turno)
         return data.data;
     },
 
