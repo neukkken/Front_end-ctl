@@ -215,9 +215,9 @@ export default function DataTableView({
 
     return (
         <div className="overflow-y-auto" ref={tableContainerRef}>
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-                <Toaster position="top-center" richColors />
+            <div className="flex flex-col md:flex-row md:items-center1 md:justify-between gap-4 mb-6">
                 <div>
+                    <Toaster position="top-center" richColors />
                     <h3 className="text-2xl font-bold text-[#22D3EE]">{title}</h3>
                     <p className="text-[#ffffff88] text-[13px]">{description}</p>
                 </div>
@@ -252,7 +252,6 @@ export default function DataTableView({
                             </div>
                         </div>
                     </div>
-
 
                     {viewOptions.length > 0 && (
                         <select
@@ -539,12 +538,9 @@ export default function DataTableView({
                                 </button>
                             </div>
                         </div>
-
-
                     </div>
                 )
             }
-
         </div>
     );
 }
