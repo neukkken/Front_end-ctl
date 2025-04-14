@@ -81,6 +81,10 @@ export default function DataTableView({
         dropdownRefs.current = dropdownRefs.current.slice(0, data.length);
     }, [data.length]);
 
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, [currentPage]);
+
     // Efecto para cambiar las columnas cuando cambia la vista
     useEffect(() => {
         if (viewOptions.length > 0) {
@@ -523,7 +527,7 @@ export default function DataTableView({
                                     }}
                                 >
                                     <Trash2Icon />
-                                    Delete
+                                    Eliminar
                                 </button>
                             </div>
                         </div>
