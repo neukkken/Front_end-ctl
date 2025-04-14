@@ -8,20 +8,17 @@ import { FincasService, NucleosService, ZonasService } from "../../../api/servic
 
 // Columnas específicas
 const zonasColumns: TableColumn[] = [
-    { header: "ID", accessor: "_id" },
     { header: "Nombre de Zona", accessor: "nombreZona" },
     { header: "Código de Zona", accessor: "codeZona" }
 ];
 
 const nucleosColumns: TableColumn[] = [
-    { header: "ID", accessor: "_id" },
     { header: "Nombre del Núcleo", accessor: "nombreNucleo" },
     { header: "Código del Núcleo", accessor: "codeNucleo" },
     { header: "Zona Asociada", accessor: "zonaId" }
 ];
 
 const fincasColumns: TableColumn[] = [
-    { header: "ID", accessor: "id" },
     { header: "Nombre de la Finca", accessor: "nombreFinca" },
     { header: "Código de la Finca", accessor: "codeFinca" },
     { header: "Núcleo Asociado", accessor: "nucleoId" }
@@ -256,7 +253,7 @@ export default function Ubicaciones() {
 
             {/* Tabla de datos */}
             <DataTableView
-                title={`Vista de ${selectedView.charAt(0).toUpperCase() + selectedView.slice(1)}`}
+                title={`Gestión de ${selectedView.charAt(0).toUpperCase() + selectedView.slice(1)}`}
                 description={`Ver y gestionar, ${selectedView} en el sistema`}
                 data={getData()}
                 columns={getColumns()}

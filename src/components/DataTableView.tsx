@@ -1,5 +1,6 @@
 import { Edit2Icon, EllipsisIcon, PlusIcon, SearchIcon, Trash2Icon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { toast, Toaster } from "sonner";
 
 // Componentes UI
 import { PrimaryButton } from "./ui/buttons/Button";
@@ -215,6 +216,7 @@ export default function DataTableView({
     return (
         <div className="overflow-y-auto" ref={tableContainerRef}>
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                <Toaster position="top-center" richColors />
                 <div>
                     <h3 className="text-2xl font-bold text-[#22D3EE]">{title}</h3>
                     <p className="text-[#ffffff88] text-[13px]">{description}</p>
@@ -465,8 +467,10 @@ export default function DataTableView({
                     try {
                         await service.create(raw);
                         onDataChange?.();
+                        toast.success(`Agregado correctamente`);
                         setIsModalAddOpen(false);
                     } catch (error) {
+                        toast.error(`Error al agregar`);
                         console.error("Error al crear:", error);
                     }
                 }}
@@ -490,9 +494,11 @@ export default function DataTableView({
 
                     try {
                         await service.update(updatedItem);
+                        toast.success(`Editado correctamente`);
                         onDataChange?.();
                         setIsModalEditOpen(false);
                     } catch (error) {
+                        toast.error(`Error al Editar`);
                         console.error("Error al actualizar:", error);
                     }
                 }}
@@ -520,8 +526,10 @@ export default function DataTableView({
                                         try {
                                             await service.delete(selectedItem._id);
                                             onDataChange?.();
+                                            toast.success(`Eliminado correctamente`);
                                             setIsDeleteModalOpen(false);
                                         } catch (error) {
+                                            toast.error(`Error al eliminar`);
                                             console.error("Error al eliminar:", error);
                                         }
                                     }}

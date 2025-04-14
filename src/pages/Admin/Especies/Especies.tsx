@@ -14,7 +14,6 @@ const fields: Field[] = [
 ];
 
 const especiesColumns: TableColumn[] = [
-    { header: "ID", accessor: "_id" },
     { header: "Nombre de la especie", accessor: "nombreEspecie" }
 ];
 
@@ -38,7 +37,7 @@ export default function Especies() {
 
     return (
         <DataTableView
-            title={`Vista de Especies`}
+            title={`Gestión de Especies`}
             description={`Ver y gestionar todos las especies en el sistema`}
             data={especies}
             columns={especiesColumns}

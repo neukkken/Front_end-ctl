@@ -25,7 +25,6 @@ const fields: Field[] = [
 ];
 
 const columns: TableColumn[] = [
-    { header: "ID", accessor: "_id" },
     { header: "Nombre de la empresa", accessor: "nombre", type: "text" },
     { header: "N. Maquinas", accessor: "totalEquipos", type: "number" },
     { header: "N. Operadores", accessor: "totalOperadores", type: "number" },
@@ -52,7 +51,7 @@ export default function Contratista() {
 
     return (
         <DataTableView
-            title="Gestión de contratistas"
+            title="Gestión de Contratistas"
             description="Ver y gestionar todos los contratistas en el sistema"
             data={contratistas}
             columns={columns}

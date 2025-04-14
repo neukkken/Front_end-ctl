@@ -7,7 +7,6 @@ import { EquipoService } from "../../../api/services/equipo.service";
 import { Equipo } from "../../../types/equipo";
 
 const columns: TableColumn[] = [
-    { header: "ID", accessor: "_id" },
     { header: "Nombre del Operador", accessor: "nameOperador", type: "text" },
     { header: "N. Cedula", accessor: "numCedula", type: "text" },
     { header: "Equipo Asignado", accessor: "equipoId.nombreEquipo", type: "text", filterable: false },
@@ -65,7 +64,7 @@ export default function Operadores() {
 
     return (
         <DataTableView
-            title="Gestión de operadores"
+            title="Gestión de Operadores"
             description="Ver y gestionar todos los operadores en el sistema"
             data={operadores}
             columns={columns}

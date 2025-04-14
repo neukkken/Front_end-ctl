@@ -27,7 +27,7 @@ const AdminLayout = () => {
             </div>
 
             {/* ✅ Header */}
-            <header className="h-20 px-6 flex items-center gap-4 border-b border-white/10 bg-[#060911] shadow-[0_2px_10px_rgba(0,0,0,0.3)] z-30 relative">
+            <header className="h-20 px-6 flex items-center gap-4 border-b border-white/10 bg-[#060911] shadow-[0_2px_10px_rgba(0,0,0,0.3)] relative">
                 <img src="/favicon-512x512.png" alt="Logo" className="w-14 h-14" />
                 <h1 className="text-[1em] font-semibold text-white tracking-wide">Administrador CTL</h1>
             </header>

@@ -7,7 +7,6 @@ import { Contratista } from "../../../types/contratista";
 import { ContratistaService } from "../../../api/services/contratistas.service";
 
 const turnosColumns: TableColumn[] = [
-    { header: "ID", accessor: "_id" },
     { header: "Nombre del turno", accessor: "nombreTurno" },
     { header: "Hora de inicio", accessor: "horaInicio" },
     { header: "Hora de fin", accessor: "horaFin" },
@@ -70,8 +69,8 @@ export default function Turnos() {
 
     return (
         <DataTableView
-            title={`Vista de Turnos`}
-            description={`Ver y gestionar todos los turnos en el sistema, (las horas están en formato 24 horas)`}
+            title={`Gestión de Turnos`}
+            description={`Ver y gestionar todos los turnos en el sistema, (formato 24 horas)`}
             data={turnos}
             columns={turnosColumns}
             fields={fields}
