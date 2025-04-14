@@ -11,10 +11,10 @@ import { Outlet } from "react-router-dom"
 
 const sideBarProps = [
     { title: "Contratistas", icon: <HandshakeIcon />, path: "/admin/contratistas" },
-    { title: "Operadores", icon: <UsersIcon />, path: "/admin/operadores" },
-    { title: "Ubicaciones", icon: <MapIcon />, path: "/admin/ubicaciones" },
     { title: "Equipo", icon: <TruckIcon />, path: "/admin/equipos" },
+    { title: "Operadores", icon: <UsersIcon />, path: "/admin/operadores" },
     { title: "Turnos", icon: <Calendar1Icon />, path: "/admin/turnos" },
+    { title: "Ubicaciones", icon: <MapIcon />, path: "/admin/ubicaciones" },
     { title: "Especies", icon: <TreesIcon />, path: "/admin/especies" },
 ]
 
