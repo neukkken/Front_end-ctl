@@ -69,24 +69,28 @@ export default function Equipos() {
             name: "nombreEquipo",
             type: "text",
             placeholder: "Introduzca el nombre",
+            required: true
         },
         {
             label: "Serie",
             name: "serieEquipo",
             type: "text",
             placeholder: "Código identificador",
+            required: true
         },
         {
             label: "Contratista",
             name: "contratistaId",
             type: "select",
-            options: contratistaOptions
+            options: contratistaOptions,
+            required: true
         },
         {
             label: "Tipo de equipo",
             name: "tipoEquipo",
             type: "select",
-            options: tipoEquipoOptions
+            options: tipoEquipoOptions,
+            required: true
         },
     ];
 
