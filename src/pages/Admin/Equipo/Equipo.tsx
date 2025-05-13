@@ -9,19 +9,34 @@ import { ContratistaService } from "../../../api/services/contratistas.service";
 const equiposColumns: TableColumn[] = [
     { header: "Nombre", accessor: "nombreEquipo" },
     { header: "Serie de equipo", accessor: "serieEquipo" },
-    { header: "Tipo de equipo", accessor: "tipoEquipo"},
+    { header: "Tipo de equipo", accessor: "tipoEquipo" },
     { header: "Contratista", accessor: "contratistaId" }
 ];
 
 export default function Equipos() {
     const [equipos, setEquipos] = useState<Equipo[]>([]);
     const [contratista, setContratistas] = useState<Contratista[]>([]);
+    const [equiposConNombreContratista, setEquiposConNombreContratista] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     const fetchData = async () => {
         try {
-            EquipoService.getAll().then(setEquipos);
-            ContratistaService.getAll().then(setContratistas);
+            const [equiposData, contratistasData] = await Promise.all([
+                EquipoService.getAll(),
+                ContratistaService.getAll()
+            ]);
+
+            setEquipos(equiposData);
+            setContratistas(contratistasData);
+
+            const contratistaMap = new Map(contratistasData.map(c => [c._id, c.nombre]));
+
+            const equiposTransformados = equiposData.map(e => ({
+                ...e,
+                contratistaId: contratistaMap.get(e.contratistaId) || "Sin asignar"
+            }));
+
+            setEquiposConNombreContratista(equiposTransformados);
         } catch (error) {
             console.error(error)
         } finally {
@@ -80,7 +95,7 @@ export default function Equipos() {
         <DataTableView
             title={`Gestión de Equipos`}
             description={`Ver y gestionar todos los equipos en el sistema`}
-            data={equipos}
+            data={equiposConNombreContratista}
             columns={equiposColumns}
             fields={fields}
             loading={!loading}

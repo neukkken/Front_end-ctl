@@ -23,7 +23,7 @@ const AdminLayout = () => {
     return (
         <div className="min-h-screen bg-[#0f172a] text-white relative overflow-hidden">
             {/* ✅ Sidebar (una sola vez) */}
-            <div className="hidden md:block fixed top-20 left-0 h-[calc(100vh-5rem)] w-80 z-40">
+            <div className="hidden md:block fixed top-20 left-0 h-[calc(100vh-5rem)] w-80">
                 <SideBar items={sideBarProps} />
             </div>
 

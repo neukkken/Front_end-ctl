@@ -129,7 +129,7 @@ export default function SideBar({ items }: SideBarProps) {
       {/* Glow mobile */}
       <div
         ref={bottomGlowRef}
-        className="pointer-events-none absolute z-0 h-40 w-40 rounded-full bg-cyan-500/20 blur-3xl transition-transform duration-300 ease-out"
+        className="pointer-events-none absolute h-40 w-40 rounded-full bg-cyan-500/20 blur-3xl transition-transform duration-300 ease-out"
         style={{ transform: "translate(-9999px, -9999px)" }}
       />
 
