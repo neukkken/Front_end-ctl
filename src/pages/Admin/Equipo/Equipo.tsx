@@ -10,7 +10,7 @@ const equiposColumns: TableColumn[] = [
     { header: "Nombre", accessor: "nombreEquipo" },
     { header: "Serie de equipo", accessor: "serieEquipo" },
     { header: "Tipo de equipo", accessor: "tipoEquipo" },
-    { header: "Contratista", accessor: "contratistaId" }
+    { header: "Contratista", accessor: "contratistaNombre" }, 
 ];
 
 export default function Equipos() {
@@ -25,24 +25,24 @@ export default function Equipos() {
                 EquipoService.getAll(),
                 ContratistaService.getAll()
             ]);
-
-            setEquipos(equiposData);
             setContratistas(contratistasData);
 
+            // Crea un mapa de ID a nombre de contratista
             const contratistaMap = new Map(contratistasData.map(c => [c._id, c.nombre]));
 
-            const equiposTransformados = equiposData.map(e => ({
-                ...e,
-                contratistaId: contratistaMap.get(e.contratistaId) || "Sin asignar"
+            // Transforma los equipos para incluir el nombre del contratista
+            const equiposTransformados = equiposData.map(equipo => ({
+                ...equipo,
+                contratistaNombre: contratistaMap.get(equipo.contratistaId) || "Desconocido"
             }));
 
             setEquiposConNombreContratista(equiposTransformados);
         } catch (error) {
-            console.error(error)
+            console.error(error);
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
         fetchData();
