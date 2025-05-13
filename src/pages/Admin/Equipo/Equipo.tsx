@@ -96,7 +96,7 @@ export default function Equipos() {
 
     return (
         <DataTableView
-            title={`Gestión de Equipos`}
+            title={`Gestión de Equipos (${equiposConNombreContratista.length})`}
             description={`Ver y gestionar todos los equipos en el sistema`}
             data={equiposConNombreContratista}
             columns={equiposColumns}

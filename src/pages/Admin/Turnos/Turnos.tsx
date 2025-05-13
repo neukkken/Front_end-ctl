@@ -69,7 +69,7 @@ export default function Turnos() {
 
     return (
         <DataTableView
-            title={`Gestión de Turnos`}
+            title={`Gestión de Turnos (${turnos.length})`}
             description={`Ver y gestionar todos los turnos en el sistema, (formato 24 horas)`}
             data={turnos}
             columns={turnosColumns}

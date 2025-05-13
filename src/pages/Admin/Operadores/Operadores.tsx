@@ -64,7 +64,7 @@ export default function Operadores() {
 
     return (
         <DataTableView
-            title="Gestión de Operadores"
+            title={`Gestión de Operadores (${operadores.length})`}
             description="Ver y gestionar todos los operadores en el sistema"
             data={operadores}
             columns={columns}

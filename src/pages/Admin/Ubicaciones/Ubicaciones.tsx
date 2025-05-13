@@ -15,7 +15,7 @@ const zonasColumns: TableColumn[] = [
 const nucleosColumns: TableColumn[] = [
     { header: "Nombre del Núcleo", accessor: "nombreNucleo" },
     { header: "Código del Núcleo", accessor: "codeNucleo" },
-    { header: "Zona Asociada", accessor: "zonaId" }
+    { header: "Zona Asociada", accessor: "zonaId" },
 ];
 
 const fincasColumns: TableColumn[] = [
@@ -65,14 +65,14 @@ export default function Ubicaciones() {
                     _id: n._id,
                     nombreNucleo: n.nombreNucleo,
                     codeNucleo: n.codeNucleo,
-                    zonaId: n.zonaId
+                    zonaId: zonas.find(z => z._id === n.zonaId)?.nombreZona || "Zona no encontrada"
                 }));
             case "fincas":
                 return fincas.map(f => ({
-                    id: f._id,
+                    _id: f._id,
                     nombreFinca: f.nombreFinca,
                     codeFinca: f.codeFinca,
-                    nucleoId: f.nucleoId
+                    nucleoId: nucleos.find(n => n._id === f.nucleoId)?.nombreNucleo || "Núcleo no encontrado"
                 }));
             default:
                 return [];
@@ -253,7 +253,7 @@ export default function Ubicaciones() {
 
             {/* Tabla de datos */}
             <DataTableView
-                title={`Gestión de ${selectedView.charAt(0).toUpperCase() + selectedView.slice(1)}`}
+                title={`Gestión de ${selectedView.charAt(0).toUpperCase() + selectedView.slice(1)} (${getData().length})`}
                 description={`Ver y gestionar, ${selectedView} en el sistema`}
                 data={getData()}
                 columns={getColumns()}

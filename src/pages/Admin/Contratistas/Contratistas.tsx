@@ -51,7 +51,7 @@ export default function Contratista() {
 
     return (
         <DataTableView
-            title="Gestión de Contratistas"
+            title={`Gestión de Contratistas (${contratistas.length})`}
             description="Ver y gestionar todos los contratistas en el sistema"
             data={contratistas}
             columns={columns}

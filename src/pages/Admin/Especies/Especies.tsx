@@ -37,7 +37,7 @@ export default function Especies() {
 
     return (
         <DataTableView
-            title={`Gestión de Especies`}
+            title={`Gestión de Especies (${especies.length})`}
             description={`Ver y gestionar todos las especies en el sistema`}
             data={especies}
             columns={especiesColumns}
