@@ -30,7 +30,7 @@ export default function Operadores() {
     };
 
     const equiposOptions = equipos.map(equipo => ({
-        label: equipo.nombreEquipo,
+        label: equipo.nombreEquipo + equipo.serieEquipo,
         value: equipo._id!
     }));
 
