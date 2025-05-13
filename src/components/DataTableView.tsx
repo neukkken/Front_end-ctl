@@ -70,6 +70,12 @@ export default function DataTableView({
     const [filterValue, setFilterValue] = useState("");
     const [currentView, setCurrentView] = useState<string>("default");
     const [currentColumns, setCurrentColumns] = useState<TableColumn[]>(columns);
+    const [sortConfig, setSortConfig] = useState<{ accessor: string; direction: 'asc' | 'desc' } | null>(null);
+    const [itemsPerPageState, setItemsPerPageState] = useState(itemsPerPage);
+
+    const getNestedValue = (obj: any, path: string): any => {
+        return path.split('.').reduce((acc, key) => acc?.[key], obj);
+    };
 
     // Refs
     const buttonRefs = useRef<ButtonRefs>([]);
@@ -123,9 +129,19 @@ export default function DataTableView({
     });
 
     // Paginación
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+    const sortedData = [...filteredData].sort((a, b) => {
+        if (!sortConfig) return 0;
+        const aValue = String(getNestedValue(a, sortConfig.accessor)).toLowerCase();
+        const bValue = String(getNestedValue(b, sortConfig.accessor)).toLowerCase();
+        if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+    });
+
+    const indexOfLastItem = currentPage * itemsPerPageState;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPageState;
+    const currentItems = sortedData.slice(indexOfFirstItem, indexOfLastItem);
+
 
     // Efectos
     useEffect(() => {
@@ -190,10 +206,6 @@ export default function DataTableView({
         }
 
         setOpenDropdownIndex(index);
-    };
-
-    const getNestedValue = (obj: any, path: string): any => {
-        return path.split('.').reduce((acc, key) => acc?.[key], obj);
     };
 
     const renderCellContent = (item: any, column: TableColumn) => {
@@ -314,7 +326,25 @@ export default function DataTableView({
                                 <tr>
                                     {currentColumns.map((column, index) => (
                                         <th key={index} className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            {column.header}
+                                            <div
+                                                className="flex items-center gap-1 cursor-pointer"
+                                                onClick={() => {
+                                                    setSortConfig(prev => {
+                                                        if (prev?.accessor === column.accessor) {
+                                                            return {
+                                                                accessor: column.accessor,
+                                                                direction: prev.direction === 'asc' ? 'desc' : 'asc'
+                                                            };
+                                                        }
+                                                        return { accessor: column.accessor, direction: 'asc' };
+                                                    });
+                                                }}
+                                            >
+                                                {column.header}
+                                                {sortConfig?.accessor === column.accessor && (
+                                                    <span>{sortConfig.direction === 'asc' ? '▲' : '▼'}</span>
+                                                )}
+                                            </div>
                                         </th>
                                     ))}
                                     <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">
@@ -443,12 +473,30 @@ export default function DataTableView({
                 </div>
             </div>
 
+            <div className="flex items-center gap-2 mb-2 text-sm text-gray-300 mt-3">
+                <label htmlFor="itemsPerPage">Mostrar</label>
+                <select
+                    id="itemsPerPage"
+                    className="border border-cyan-600/30 bg-black rounded-[5px] px-2 py-1 focus:outline-none focus:ring-1 focus:ring-cyan-400 text-white"
+                    value={itemsPerPageState}
+                    onChange={(e) => {
+                        setItemsPerPageState(Number(e.target.value));
+                        setCurrentPage(1);
+                    }}
+                >
+                    {[5, 10, 20, 50, 100].map(value => (
+                        <option key={value} value={value}>{value}</option>
+                    ))}
+                </select>
+                <label>registros por página</label>
+            </div>
+
             {/* Paginación */}
             <div className="mt-4">
                 <Pagination
                     currentPage={currentPage}
                     totalItems={filteredData.length}
-                    itemsPerPage={itemsPerPage}
+                    itemsPerPage={itemsPerPageState}
                     onPageChange={setCurrentPage}
                 />
             </div>

@@ -14,7 +14,6 @@ const equiposColumns: TableColumn[] = [
 ];
 
 export default function Equipos() {
-    const [equipos, setEquipos] = useState<Equipo[]>([]);
     const [contratista, setContratistas] = useState<Contratista[]>([]);
     const [equiposConNombreContratista, setEquiposConNombreContratista] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
