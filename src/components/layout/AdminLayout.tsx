@@ -30,9 +30,8 @@ const AdminLayout = () => {
 
             {/* ✅ Layout principal con Sidebar + Main */}
             <div className="flex flex-1 overflow-hidden">
-                {/* Sidebar fijo a la izquierda */}
-                <div className="hidden md:block w-80 bg-[#0f172a] border-r border-white/10">
-                    <div className="fixed top-20 h-[calc(100vh-5rem)] w-80">
+                <div className="hidden md:flex w-80 bg-[#0f172a] border-r border-white/10 overflow-hidden">
+                    <div className="flex flex-col h-[calc(100vh-5rem)] w-full">
                         <SideBar items={sideBarProps} />
                     </div>
                 </div>

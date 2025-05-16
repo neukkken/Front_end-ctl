@@ -282,7 +282,7 @@ export default function DataTableView({
 
                     <PrimaryButton
                         onClick={() => setIsModalAddOpen(true)}
-                        styles="flex rounded-lg px-4 py-2 items-center justify-center text-black bg-white"
+                        styles="flex rounded-lg px-4 py-2 h-11 items-center justify-center text-black bg-white"
                         text={addButtonText}
                         icon={<PlusIcon size={20} className="mr-2" />}
                     />
