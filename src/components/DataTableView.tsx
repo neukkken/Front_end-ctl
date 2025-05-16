@@ -315,7 +315,7 @@ export default function DataTableView({
                 ))}
             </div>
 
-            <div className="relative rounded-lg overflow-hidden group">
+            <div className="relative rounded-lg overflow-visible group">
                 <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-cyan-500/30 to-purple-500/30 blur-sm z-0"></div>
 
                 <div className="relative z-10 rounded-lg border border-cyan-800/20 bg-black/60 backdrop-blur-3xl">
