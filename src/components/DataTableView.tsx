@@ -115,18 +115,26 @@ export default function DataTableView({
     // Datos filtrados
     const filteredData = data.filter(item => {
         if (searchTerm) {
-            const matchesSearch = Object.values(item).some(
-                val => String(val).toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            if (!matchesSearch) return false;
+            const lowerSearch = searchTerm.toLowerCase()
+
+            const matchesSearch = currentColumns.some(col => {
+                const raw = getNestedValue(item, col.accessor)
+                const text = raw != null ? String(raw).toLowerCase() : ""
+                return text.includes(lowerSearch)
+            })
+
+            if (!matchesSearch) return false
         }
 
+        // filtro por columna concreta (igual que antes)…
         if (activeFilter && filterValue) {
-            return String(item[activeFilter]).toLowerCase().includes(filterValue.toLowerCase());
+            return String(item[activeFilter])
+                .toLowerCase()
+                .includes(filterValue.toLowerCase())
         }
 
-        return true;
-    });
+        return true
+    })
 
     // Paginación
     const sortedData = [...filteredData].sort((a, b) => {
